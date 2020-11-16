@@ -15,10 +15,11 @@ public class AppTest {
     }
     @Test
     public void test_ResponseStatusCode200() {
-    given().
-    when().
-        get("https://jsonplaceholder.typicode.com/todos/1")
-    .then()
-        .statusCode(is(equalTo(200)));
+        given().
+            baseUri("https://jsonplaceholder.typicode.com").
+        when().
+            get("/todos/1").
+        then()
+            .statusCode(is(equalTo(200)));
     }
 }
