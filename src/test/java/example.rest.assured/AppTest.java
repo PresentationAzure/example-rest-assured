@@ -7,6 +7,8 @@ import org.testng.annotations.*;
 import static org.testng.Assert.*;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
+import io.restassured.response.Response;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -32,12 +34,22 @@ public class AppTest {
         request.put("body", "body-at-12");
         request.put("userId", 192);
 
-        given().
-        baseUri("https://jsonplaceholder.typicode.com").
-        body(request.toJSONString()).
+        Response response = given().
+           header("Content-type", "application/json").
+           and().
+           baseUri("https://jsonplaceholder.typicode.com").
+           and().
+           body(request.toJSONString()).
         when().
-           post("/posts").
+            post("/posts").
         then().
-           statusCode(is(equalTo(201)));
+            statusCode(is(equalTo(201))).
+            and().
+            extract().response();
+
+        assertEquals(201, response.statusCode());
+        assertEquals("192", response.jsonPath().getString("userId"));
+        assertEquals("title-at-12", response.jsonPath().getString("title"));
+        assertEquals("body-at-12", response.jsonPath().getString("body"));
     }
 }
