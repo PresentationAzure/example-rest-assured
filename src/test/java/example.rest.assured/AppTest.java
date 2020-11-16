@@ -5,10 +5,20 @@ package example.rest.assured;
 
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 
 public class AppTest {
     @Test public void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    }
+    @Test
+    public void test_ResponseStatusCode200() {
+    given().
+    when().
+        get("https://jsonplaceholder.typicode.com/todos/1")
+    .then()
+        .statusCode(is(equalTo(200)));
     }
 }
